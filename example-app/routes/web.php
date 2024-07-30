@@ -23,10 +23,10 @@ Route::get('/pet/findByStatus/{status}', [PetsController::class, 'getByStatus'] 
 Route::get('/pet/{id}', [PetsController::class, 'findPet'] );
 
 //ACTUALIZAR REGISTRO
-Route::post('/pet/actu/{id}', [PetsController::class, 'updatePet']);
+Route::put('/pet/actu/{id}', [PetsController::class, 'updatePet']);
 
 //ELIMINAR PET POR ID 
-Route::post('/pet/{petId}', [PetsController::class, 'delete']);
+Route::delete('/pet/{petId}', [PetsController::class, 'delete']);
 
 Route::get('/token', function () {
     return response()->json(['csrf_token' => csrf_token()]);

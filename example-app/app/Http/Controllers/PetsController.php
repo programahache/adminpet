@@ -26,13 +26,13 @@ class PetsController extends Controller
 
         try {
             // VALIDO LA SOLICITUD 
-            // $request->validate([
-            //     'name' => 'required|string|max:255',
-            //     'photoUrls' => 'required|array',
-            //     'tags' => 'required|array',
-            //     'status' => 'required|in:available,pending,sold',
-            //     'category_id' => 'required|exists:category,id',
-            // ]);
+            $request->validate([
+                'name' => 'required|string|max:255',
+                'photoUrls' => 'required|array',
+                'tags' => 'required|array',
+                'status' => 'required|in:available,pending,sold',
+                'category_id' => 'required|exists:category,id',
+            ]);
 
             // CREAMOS LA MASCOTA 
             $pet = Pets::create([
