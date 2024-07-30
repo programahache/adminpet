@@ -19,7 +19,7 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['http://localhost:5173'], // Asegúrate de usar tu dominio frontend aquí
+    'allowed_origins' => ['http://localhost:5173/'], // Asegúrate de usar tu dominio frontend aquí
 
     'allowed_origins_patterns' => [],
 

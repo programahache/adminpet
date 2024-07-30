@@ -26,13 +26,13 @@ class PetsController extends Controller
 
         try {
             // VALIDO LA SOLICITUD 
-            $request->validate([
-                'name' => 'required|string|max:255',
-                'photoUrls' => 'required|array',
-                'tags' => 'required|array',
-                'status' => 'required|in:available,pending,sold',
-                'category_id' => 'required|exists:category,id',
-            ]);
+            // $request->validate([
+            //     'name' => 'required|string|max:255',
+            //     'photoUrls' => 'required|array',
+            //     'tags' => 'required|array',
+            //     'status' => 'required|in:available,pending,sold',
+            //     'category_id' => 'required|exists:category,id',
+            // ]);
 
             // CREAMOS LA MASCOTA 
             $pet = Pets::create([
@@ -44,12 +44,16 @@ class PetsController extends Controller
             ]);
 
             $this->addApi(201, 'Creado correctamente', 'POST');
+
             // Devolver una respuesta
             return response()->json($pet, 201);
+
         } catch (\Throwable $th) {
             $this->addApi(400, 'Error en la creacion', 'POST');
             return $th;
         }
+
+       
     }
 
     //MOSTRAR CATEGORIAS
@@ -94,17 +98,31 @@ class PetsController extends Controller
 
 
 
-    // ACTUALIZAR MASCOTA 
     public function updatePet(Request $request, $id)
     {
-
-        $pet = Pets::find($id);
-
-        $pet->update($request->all());
-
-        // Devolver una respuesta
-        $this->addApi(200, 'Mascota actualizada', 'PUT');
-        return response()->json($pet, 201);
+        try {
+            // Buscar la mascota por ID
+            $pet = Pets::find($id);
+            
+            // Verificar si se encontró la mascota
+            if (!$pet) {
+                // Devolver una respuesta con error si no se encuentra
+                return response()->json(['message' => 'Mascota no encontrada'], 404);
+            }
+    
+            // Actualizar la mascota con los datos de la solicitud
+            $pet->update($request->all());
+    
+            // // Registrar la respuesta en la base de datos
+            // $this->addApi(200, 'Mascota actualizada', 'PUT');
+    
+            // Devolver una respuesta exitosa
+            return response()->json($pet, 200);
+        } catch (\Exception $e) {
+            // Manejar errores y devolver una respuesta de error
+            $this->addApi(500, 'Error al actualizar la mascota: ' . $e->getMessage(), 'PUT');
+            return response()->json(['message' => 'Error al actualizar la mascota'], 500);
+        }
     }
 
     // ELIMINAR MASCOTA 
@@ -114,7 +132,7 @@ class PetsController extends Controller
         if ($pet) {
             $pet->delete();
             $this->addApi(200, 'Eliminado correctamente', 'DESTROY');
-            return response()->json('Eliminado correctamente', 201);
+            return response()->json('Eliminado correctamente', 200);
         } else {
             $this->addApi(400, 'Registro no encontrado', 'DESTROY');
             return response()->json('Registro no encontrado', 400);

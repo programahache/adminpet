@@ -14,6 +14,13 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         //
+        $middleware->validateCsrfTokens(except: [
+            'http://localhost:5173',
+            'http://localhost',
+            '*',
+            'pet/create',
+            'pet/actu'
+        ]);
    
     })
     ->withExceptions(function (Exceptions $exceptions) {
