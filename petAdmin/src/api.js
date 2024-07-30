@@ -13,7 +13,7 @@ export const getApiKey = async () => {
     }
 }
 
-
+const tok = await getApiKey()
 
 export const getPets = async () => {
     try {
@@ -38,22 +38,70 @@ export const getCategories = async () => {
 }
 
 
-export const updatePet = async (pet,id) => {
+export const createPet = async (pet) => {
     try {
-        const response = await fetch(`http://blog.test/pet/actu/${id}`, {
-            method: 'PUT',
+        const response = await fetch(`http://blog.test/pet/create`, {
+            method: 'POST',
+            mode:'no-cors',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(pet),
         });
+
         if (!response.ok) {
-            throw new Error('Error al actualizar la mascota');
+            throw new Error(`Error: ${response.statusText}`);
         }
+
+        return await response.json();
+    } catch (error) {
+        console.error('Error en la solicitud de actualización', error);
+        throw error;
+    }
+}
+
+export const updatePet = async (pet, id) => {
+    try {
+        const response = await fetch(`http://blog.test/pet/actu/${id}`, {
+            method: 'POST',
+            mode:'no-cors',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(pet),
+        });
+
+        if (!response.ok) {
+            throw new Error(`Error: ${response.statusText}`);
+        }
+
         return await response.json();
     } catch (error) {
         console.error('Error en la solicitud de actualización', error);
         throw error;
     }
 };
+
+export const deletePet = async (id) => {
+    try {
+        const response = await fetch(`http://blog.test/pet/${id}`, {
+            method: 'POST',
+            mode:'no-cors',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(id),
+        });
+
+        if (!response.ok) {
+            throw new Error(`Error: ${response.statusText}`);
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error('Error en la solicitud de actualización', error);
+        throw error;
+    }
+};
+
 

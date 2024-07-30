@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import image from '../../image.png'
-import { getCategories, updatePet } from '../api';
+import { getCategories, updatePet, deletePet, createPet } from '../api';
 
 
 const props = defineProps({
@@ -45,22 +45,70 @@ const hanlderEdit = async () => {
         return
     }
 
-    const updatedPet = { ...props.pet, name: editName.value, status: status.value, category_id: category_i.value }
-    console.log(updatedPet)
- 
     try {
-        const updatedPet = { ...props.pet, name: editName.value, status: status.value, category_id: category_i.value }
+        const updatedPet = { ...props.pet, name: editName.value, status: status.value, category_id: category_i.value, photoUrls: ["http://example.com/photo1.jpg", "http://example.com/photo2.jpg"], tags: [{ "id": 1, "name": "cute" }, { "id": 2, "name": "dog" }] }
         await updatePet(updatedPet, props.pet.id)
         console.log('Mascota actualizada', updatedPet)
-        toggleEdit()
     } catch (error) {
         console.error('Error al actualizar la mascota', error)
     }
 
 }
 
+const handlerDelete = async (id) => {
+    try {
+        await deletePet(id); // Llama a la función de API para eliminar la mascota
+        console.log('Mascota eliminada', id);
+        window.location.reload(); // Recarga la página
+    } catch (error) {
+        window.location.reload(); // Recarga la página
+        console.error('Error al eliminar la mascota', error);
+    }
+}
+
+const hanlderCreate = async () => {
+
+    // const categoryIsValid = Number.isInteger(category_i.value) && category_i.value > 0
+    // const nameIsValid = editName.value.trim().length > 0
+    // const statusIsValid = status.value.trim().length > 0
+
+    // console.log(categoryIsValid)
+
+    // if (!categoryIsValid || !nameIsValid || !statusIsValid) {
+    //     alert("Los campos nos estan completos")
+    //     return
+    // }
+
+    const pet = {
+        "id": 3,
+        "category_id": 1,
+        "name": "desde el front",
+        "photoUrls": [
+            "http://example.com/photo1.jpg",
+            "http://example.com/photo2.jpg"
+        ],
+        "tags": [
+            {
+                "id": 1,
+                "name": "cute"
+            },
+            {
+                "id": 2,
+                "name": "dog"
+            }
+        ],
+        "status": "pending",
+        "created_at": "2024-07-28T23:39:04.000000Z",
+        "updated_at": "2024-07-28T23:39:04.000000Z"
+    }
 
 
+
+    createPet(pet)
+
+    // 
+
+}
 
 
 
@@ -82,11 +130,13 @@ const hanlderEdit = async () => {
                 </div>
             </div>
             <div class=" flex gap-2">
+                <button @click="hanlderCreate"
+                    class="px-5 py-1 bg-purple-600 rounded hover:bg-purple-500 text-white font-semibold">Add</button>
                 <button @click="isEdit = true"
                     class="px-5 py-1 bg-purple-600 rounded hover:bg-purple-500 text-white font-semibold">Editar</button>
                 <button @click="isModal = true"
                     class="px-5 py-1 bg-yellow-500 rounded hover:bg-purple-500 text-white font-semibold">Info</button>
-                <button
+                <button @click="() => { handlerDelete(pet.id) }"
                     class="px-5 py-1 bg-red-600 rounded hover:bg-purple-500 text-white font-semibold">Eliminar</button>
             </div>
         </div>
